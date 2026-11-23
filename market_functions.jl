@@ -12,7 +12,7 @@ function day_ahead_dispatch(h)
     B = [250, 300, 270]
     G = [1, 1, 1]
 
-    model = Model(Ipopt.Optimizer)
+    model = JuMP.Model(Ipopt.Optimizer)
 
     @variable(model, x[1:3])
 
@@ -30,12 +30,9 @@ function day_ahead_dispatch(h)
     return generation, total_cost
 end
 
-function real_time_dispatch(p_DA, Pg_RT)
+function real_time_dispatch(p_DA, Pg_RT; kup = 1.0, kdown = 1.0)
 
     B = [250, 300, 270]
-
-    kup = 1.0
-    kdown = 1.0
 
     a = 2 * [0.11, 0.085, 0.1225]
     c = [5.0, 1.2, 1.0]
@@ -45,7 +42,7 @@ function real_time_dispatch(p_DA, Pg_RT)
 
     Q = vcat(a .* p_DA .+ c .+ kup, a .* p_DA .- c .+ kdown)
 
-    model = Model(Ipopt.Optimizer)
+    model = JuMP.Model(Ipopt.Optimizer)
 
     @variable(model, x[1:6] >= 0)
     @constraint(model, [i=1:3], x[i] <= B[i] - p_DA[i])
