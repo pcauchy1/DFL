@@ -44,7 +44,7 @@ function real_time_dispatch(p_DA, Pg_RT; kup = 1.0, kdown = 1.0)
 
     model = JuMP.Model(Ipopt.Optimizer)
 
-    @variable(model, x[1:6] >= 0)
+    @variable(model, x[1:6] >= 0)t
     @constraint(model, [i=1:3], x[i] <= B[i] - p_DA[i])
     @constraint(model, [i=1:3], x[i+3] <= p_DA[i])
     @constraint(model, sum(x[1:3]) - sum(x[4:6]) == Pg_RT - sum(p_DA))
